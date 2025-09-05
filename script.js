@@ -75,7 +75,7 @@ function handleCardClick(cardElement, card){    // ignora click quando verifica 
     if(card.classList.contains("revealed")){
         attempts--
         //remove classe que revela o conteudo
-        cardE.classList.remove("revealed")
+        cardElement.classList.remove("revealed")
         return
     }else if(!cardElement.classList.contains("revealed")){
         attempts++
