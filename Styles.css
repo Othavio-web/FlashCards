@@ -1,86 +1,77 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #f9f9f9;
+      margin: 0;
+    }
 
-body{
-    background-color: black;
-    min-height: 100vh;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: "Roboto", sans-serif;
-}
+    h1 { margin-bottom: 20px; }
 
-.game-conteiner{
-    min-width: 544px;
-    max-width: 554px;
-}
+    .card {
+      width: 320px;
+      height: 200px;
+      perspective: 1000px;
+      margin-bottom: 20px;
+    }
 
-.game-header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 32px;
-}
+    .inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+      cursor: pointer;
+    }
 
-.cards-grid{
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-}
+    .flipped {
+      transform: rotateY(180deg);
+    }
 
-.card{
-    width: calc(25%-5px);
-    aspect-ratio: 1;
-    background-color: #8234e0;
-    border: 2px solid #5a0caf;
-    border-radius: 12px;
-    /*background-image: url(./assets/lines.svg);*/
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-}
+    .question, .answer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+      border-radius: 12px;
+      backface-visibility: hidden;
+      border: 2px solid #333;
+      padding: 15px;
+      box-sizing: border-box;
+    }
 
-.card-resposta{
-    background-color: #ffffff;
-    border-color: #bababa;
-    cursor: not-allowed;
-}
+    .question {
+      background: #ffffff;
+    }
 
-/*.card-emoji{
-    font-size: 40px;
-    display: none;
-}
+    .answer {
+      background: #333333;
+      color: #ffffff;
+      transform: rotateY(180deg);
+    }
 
-.revealed .card-emoji{
-    display: block;
-}
-*/
-.stats{
-    color: #ffffff;
-    font-size: 16px;
-}
+    .controls {
+      display: flex;
+      gap: 10px;
+    }
 
-.button{
-    width: 100%;
-    height: 52px;
-    background-color: #8234e9;
-    color: #ffffff;
-    font-weight: 500;
-    font-size: 16px;
-    border-radius: 7px;
-    border: 2px solid #5a0caf;
-    cursor: pointer;
-    font-family: "Roboto", sans-serif;
-    transition: background-color 0.3s;
-    margin-top: 32px;
-}
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      background: #333;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
 
-.button :hover{
-    background-color: #7029d6;
-}
+    button:hover {
+      background: #555;
+    }
