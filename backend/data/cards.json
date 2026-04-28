@@ -1,0 +1,34 @@
+{
+  "cards": [
+    {
+      "id": 1,
+      "category": "JavaScript",
+      "front": "O que é o this em JavaScript?",
+      "back": "this se refere ao contexto de execução atual. Seu valor varia dependendo de como a função é chamada."
+    },
+    {
+      "id": 2,
+      "category": "JavaScript",
+      "front": "O que são funções de callback em JavaScript?",
+      "back": "São funções passadas como argumento para outra função, que serão executadas após um determinado evento ou operação."
+    },
+    {
+      "id": 3,
+      "category": "JavaScript",
+      "front": "O que é hoisting em JavaScript?",
+      "back": "Hoisting é o comportamento em que declarações de variáveis e funções são 'movidas' para o topo do escopo durante a fase de compilação."
+    },
+    {
+      "id": 4,
+      "category": "React",
+      "front": "O que é useState?",
+      "back": "useState é um Hook do React que permite adicionar estado em componentes funcionais. Retorna um array com o estado atual e uma função para atualizá-lo."
+    },
+    {
+      "id": 5,
+      "category": "React",
+      "front": "Como funciona o useEffect?",
+      "back": "useEffect executa efeitos colaterais após a renderização. Pode depender de um array de dependências para controlar quando executar."
+    }
+  ]
+}

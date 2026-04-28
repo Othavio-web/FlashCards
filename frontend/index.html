@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcards - CRUD</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>📚 Flashcards</h1>
+    
+    <!-- 🔖 Seletor de Categoria -->
+    <div class="category-selector">
+      <label for="categoryFilter">Categoria:</label>
+      <select id="categoryFilter">
+        <option value="">Todas</option>
+        <option value="JavaScript">JavaScript</option>
+        <option value="React">React</option>
+        <option value="Node.js">Node.js</option>
+      </select>
+    </div>
+
+    <!-- 📖 Card Display -->
+    <div class="card">
+      <div class="inner" id="card">
+        <div class="question" id="question">Clique em um card para começar</div>
+        <div class="answer" id="answer">Carregando...</div>
+      </div>
+    </div>
+
+    <!-- 🎮 Controles de Navegação -->
+    <div class="controls">
+      <button id="prevBtn" class="btn">⬅️ Anterior</button>
+      <button id="nextBtn" class="btn">Próximo ➡️</button>
+    </div>
+
+    <!-- ➕ Formulário para Adicionar Card -->
+    <div class="form-section">
+      <h2>➕ Adicionar Novo Card</h2>
+      <form id="addCardForm">
+        <input 
+          type="text" 
+          id="newCategory" 
+          placeholder="Categoria (ex: JavaScript)" 
+          required
+        >
+        <input 
+          type="text" 
+          id="newFront" 
+          placeholder="Pergunta" 
+          required
+        >
+        <textarea 
+          id="newBack" 
+          placeholder="Resposta" 
+          required
+        ></textarea>
+        <button type="submit" class="btn-add">Adicionar Card</button>
+      </form>
+    </div>
+
+    <!-- 📋 Lista de Cards (para editar/deletar) -->
+    <div class="list-section">
+      <h2>📋 Seus Cards</h2>
+      <div id="cardsList" class="cards-grid"></div>
+    </div>
+  </div>
+
+  <script src="api.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
