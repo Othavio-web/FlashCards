@@ -15,18 +15,18 @@ body {
 }
 
 .container {
-  max-width: 800px;
+  max-width: 900px;
   width: 100%;
   background: white;
-  border-radius: 15px;
+  border-radius: 18px;
   padding: 30px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.18);
 }
 
 h1 {
   text-align: center;
   color: #333;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   font-size: 2.5em;
 }
 
@@ -37,7 +37,34 @@ h2 {
   font-size: 1.5em;
 }
 
-/* ===== CATEGORY SELECTOR ===== */
+.feedback {
+  width: 100%;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  font-weight: bold;
+  text-align: center;
+  transition: opacity 0.3s ease;
+}
+
+.feedback.success {
+  background: #d4f5e9;
+  color: #147d44;
+}
+
+.feedback.error {
+  background: #ffd7d7;
+  color: #8b1f1f;
+}
+
+.feedback.loading {
+  background: #eef2ff;
+  color: #2f3a8f;
+}
+
+.hidden {
+  display: none !important;
+}
 
 .category-selector {
   margin-bottom: 20px;
@@ -53,19 +80,17 @@ h2 {
 }
 
 .category-selector select {
-  padding: 8px 12px;
+  padding: 10px 14px;
   border: 2px solid #667eea;
-  border-radius: 5px;
+  border-radius: 8px;
   font-size: 1em;
   cursor: pointer;
   background: white;
 }
 
-/* ===== CARD DISPLAY ===== */
-
 .card {
   width: 100%;
-  height: 300px;
+  height: 320px;
   perspective: 1000px;
   margin: 30px 0;
 }
@@ -92,13 +117,14 @@ h2 {
   justify-content: center;
   align-items: center;
   font-size: 1.2em;
-  border-radius: 12px;
+  border-radius: 16px;
   backface-visibility: hidden;
   border: 3px solid #667eea;
-  padding: 20px;
+  padding: 24px;
   box-sizing: border-box;
   text-align: center;
   line-height: 1.6;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.03);
 }
 
 .question {
@@ -107,12 +133,10 @@ h2 {
 }
 
 .answer {
-  background: #f0f0f0;
+  background: #fafafa;
   color: #333;
   transform: rotateY(180deg);
 }
-
-/* ===== CONTROLS ===== */
 
 .controls {
   display: flex;
@@ -121,10 +145,14 @@ h2 {
   margin-bottom: 30px;
 }
 
-.btn {
+.btn,
+.btn-add,
+.btn-edit,
+.btn-delete,
+.btn-secondary {
   padding: 12px 24px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   background: #667eea;
   color: white;
   font-size: 1em;
@@ -133,67 +161,78 @@ h2 {
   font-weight: bold;
 }
 
-.btn:hover {
+.btn:hover,
+.btn-add:hover,
+.btn-edit:hover,
+.btn-delete:hover,
+.btn-secondary:hover {
   background: #764ba2;
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
 }
 
-/* ===== FORM SECTION ===== */
+.btn:disabled,
+.btn-add:disabled,
+.btn-edit:disabled,
+.btn-delete:disabled,
+.btn-secondary:disabled,
+input:disabled,
+textarea:disabled,
+select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
 
 .form-section {
   background: #f9f9f9;
-  padding: 20px;
-  border-radius: 10px;
+  padding: 24px;
+  border-radius: 16px;
   margin-bottom: 30px;
 }
 
-#addCardForm {
+#addCardForm,
+#editCardForm {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 #addCardForm input,
-#addCardForm textarea {
-  padding: 12px;
+#addCardForm textarea,
+#editCardForm input,
+#editCardForm textarea {
+  padding: 14px;
   border: 2px solid #ddd;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 1em;
   font-family: inherit;
   transition: border-color 0.3s;
 }
 
 #addCardForm input:focus,
-#addCardForm textarea:focus {
+#addCardForm textarea:focus,
+#editCardForm input:focus,
+#editCardForm textarea:focus {
   outline: none;
   border-color: #667eea;
-  box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 0 8px rgba(102, 126, 234, 0.2);
 }
 
-#addCardForm textarea {
+#addCardForm textarea,
+#editCardForm textarea {
   resize: vertical;
-  min-height: 80px;
+  min-height: 90px;
 }
 
 .btn-add {
-  padding: 12px 24px;
   background: #667eea;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1em;
-  cursor: pointer;
-  transition: all 0.3s;
-  font-weight: bold;
 }
 
 .btn-add:hover {
   background: #764ba2;
-  transform: translateY(-2px);
 }
-
-/* ===== LIST SECTION ===== */
 
 .list-section {
   margin-top: 40px;
@@ -208,8 +247,8 @@ h2 {
 .card-item {
   background: #f9f9f9;
   border: 2px solid #ddd;
-  border-radius: 10px;
-  padding: 15px;
+  border-radius: 14px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -218,7 +257,7 @@ h2 {
 
 .card-item:hover {
   border-color: #667eea;
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.18);
 }
 
 .card-info strong {
@@ -242,21 +281,56 @@ h2 {
   gap: 8px;
 }
 
-.btn-edit,
-.btn-delete {
-  flex: 1;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.9em;
-  transition: all 0.3s;
-  font-weight: bold;
+.btn-edit {
+  background: #2d9cdb;
 }
 
-.btn-edit {
-  background: #667eea;
-  color: white;
+.btn-delete {
+  background: #e74c3c;
+}
+
+.btn-secondary {
+  background: #999;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  width: min(520px, 100%);
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.modal h2 {
+  margin-bottom: 18px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+@media (max-width: 700px) {
+  .controls {
+    flex-direction: column;
+  }
+
+  .card {
+    height: 260px;
+  }
 }
 
 .btn-edit:hover {
