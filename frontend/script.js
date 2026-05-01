@@ -77,6 +77,7 @@ async function loadCards() {
   }
 
   await renderCardsList();
+  renderCardsGrid();
   setLoading(false);
 }
 
@@ -149,6 +150,37 @@ async function renderCardsList() {
       </div>
     `;
     cardsList.appendChild(cardItem);
+  });
+}
+
+function renderCardsGrid() {
+  const cardsGridElement = document.getElementById('cardsGrid');
+  const allCards = currentCards;
+
+  if (allCards.length === 0) {
+    cardsGridElement.innerHTML = '<p>Nenhum card disponível</p>';
+    return;
+  }
+
+  cardsGridElement.innerHTML = '';
+
+  allCards.forEach((card) => {
+    const cardMini = document.createElement('div');
+    cardMini.className = 'card-mini';
+    cardMini.innerHTML = `
+      <div class="inner">
+        <div class="face front">
+          <div>${card.front}</div>
+        </div>
+        <div class="face back">
+          <div>${card.back}</div>
+        </div>
+      </div>
+    `;
+    cardMini.addEventListener('click', () => {
+      cardMini.classList.toggle('flipped');
+    });
+    cardsGridElement.appendChild(cardMini);
   });
 }
 
