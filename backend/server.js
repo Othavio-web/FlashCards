@@ -1,9 +1,13 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const Card = require('./Card');
 const { sequelize, testarConexao, sincronizarBanco } = require('./banco');
+
+const ALLOWED_CATEGORIES = ['JavaScript', 'React', 'Node.js', 'HTML', 'CSS', 'TypeScript', 'Python'];
+const FRONTEND_DIR = path.join(__dirname, '../frontend');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,11 +15,38 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.static(FRONTEND_DIR));
 
 // 🔌 INICIALIZAR BANCO DE DADOS
+async function seedDatabase() {
+  const count = await Card.count();
+  if (count === 0) {
+    const seedCards = [
+      {
+        category: 'JavaScript',
+        front: 'O que é hoisting em JavaScript?',
+        back: 'Hoisting é o comportamento de mover declarações para o topo do escopo durante a fase de compilação.'
+      },
+      {
+        category: 'React',
+        front: 'O que é um hook useState?',
+        back: 'useState permite adicionar estado local ao componente funcional.'
+      },
+      {
+        category: 'Node.js',
+        front: 'Para que serve o Express?',
+        back: 'Express é um framework web para criar rotas e APIs em Node.js de forma simples.'
+      }
+    ];
+    await Card.bulkCreate(seedCards);
+    console.log(`✅ Seed criado com ${seedCards.length} cards.`);
+  }
+}
+
 async function inicializarBanco() {
   await testarConexao();
   await sincronizarBanco();
+  await seedDatabase();
 }
 
 // ===== ROTAS DO CRUD =====
@@ -55,6 +86,10 @@ app.post('/api/cards', async (req, res) => {
       return res.status(400).json({ error: 'Category, front e back são obrigatórios' });
     }
 
+    if (!ALLOWED_CATEGORIES.includes(category)) {
+      return res.status(400).json({ error: 'Categoria inválida. Use uma categoria de programação fixa.' });
+    }
+
     const newCard = await Card.create({
       category,
       front,
@@ -77,6 +112,11 @@ app.put('/api/cards/:id', async (req, res) => {
     
     if (!card) {
       return res.status(404).json({ error: 'Card não encontrado' });
+    }
+
+    // Validação de categoria fixa
+    if (category && !ALLOWED_CATEGORIES.includes(category)) {
+      return res.status(400).json({ error: 'Categoria inválida. Use uma categoria de programação fixa.' });
     }
 
     // Atualizar campos
@@ -109,12 +149,12 @@ app.delete('/api/cards/:id', async (req, res) => {
   }
 });
 
-// 🏠 GET: Rota raiz (teste se está funcionando)
-app.get('/', (req, res) => {
-  res.json({
-    message: '✅ API de Flashcards está rodando com SQLite!',
-    documentation: 'Acesse http://localhost:3000/api/cards'
-  });
+// 🏠 Servir frontend para todas as rotas não-API
+app.get('*', (req, res) => {
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ error: 'Rota de API não encontrada' });
+  }
+  res.sendFile(path.join(FRONTEND_DIR, 'index.html'));
 });
 
 // Iniciar servidor

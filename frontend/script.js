@@ -1,7 +1,8 @@
-// 🎮 LÓGICA DO FRONTEND
+﻿// 🎮 LÓGICA DO FRONTEND
 
 let currentCards = [];
 let currentIndex = 0;
+let editingCardId = null;
 
 const cardElement = document.getElementById('card');
 const questionElement = document.getElementById('question');
@@ -11,45 +12,83 @@ const addCardForm = document.getElementById('addCardForm');
 const cardsList = document.getElementById('cardsList');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
+const feedbackElement = document.getElementById('feedback');
+const editModal = document.getElementById('editModal');
+const editCardForm = document.getElementById('editCardForm');
+const editCategoryInput = document.getElementById('editCategory');
+const editFrontInput = document.getElementById('editFront');
+const editBackInput = document.getElementById('editBack');
+const closeEditModalBtn = document.getElementById('closeEditModal');
 
-// ===== CARREGAR CARDS =====
+function showFeedback(message, type = 'success') {
+  feedbackElement.textContent = message;
+  feedbackElement.className = `feedback ${type}`;
+  feedbackElement.classList.remove('hidden');
+  if (type !== 'loading') {
+    setTimeout(() => {
+      feedbackElement.classList.add('hidden');
+    }, 3500);
+  }
+}
+
+function clearFeedback() {
+  feedbackElement.className = 'feedback hidden';
+  feedbackElement.textContent = '';
+}
+
+function setLoading(isLoading) {
+  if (isLoading) {
+    showFeedback('Carregando...', 'loading');
+  } else {
+    clearFeedback();
+  }
+
+  const allControls = document.querySelectorAll('button, input, textarea, select');
+  allControls.forEach((control) => {
+    control.disabled = isLoading;
+  });
+}
+
+function validateCardForm(category, front, back) {
+  if (!category.trim() || !front.trim() || !back.trim()) {
+    showFeedback('Preencha todos os campos antes de enviar.', 'error');
+    return false;
+  }
+  return true;
+}
 
 async function loadCards() {
+  setLoading(true);
   const selectedCategory = categoryFilter.value;
-  
+
   if (selectedCategory) {
     currentCards = await getCardsByCategory(selectedCategory);
   } else {
     currentCards = await getAllCards();
   }
-  
+
   currentIndex = 0;
-  
+
   if (currentCards.length > 0) {
     showCard(currentIndex);
   } else {
     questionElement.textContent = 'Nenhum card encontrado';
     answerElement.textContent = '';
   }
-  
-  renderCardsList();
-}
 
-// ===== EXIBIR CARD =====
+  await renderCardsList();
+  renderCardsGrid();
+  setLoading(false);
+}
 
 function showCard(index) {
   if (currentCards.length === 0) return;
-  
+
   const card = currentCards[index];
   questionElement.textContent = card.front;
   answerElement.textContent = card.back;
   cardElement.classList.remove('flipped');
-  
-  // Mostrar posição atual
-  console.log(`Card ${index + 1} de ${currentCards.length}`);
 }
-
-// ===== NAVEGAÇÃO =====
 
 function nextCard() {
   if (currentCards.length === 0) return;
@@ -63,43 +102,41 @@ function prevCard() {
   showCard(currentIndex);
 }
 
-// ===== VIRAR CARD =====
-
 cardElement.addEventListener('click', () => {
   cardElement.classList.toggle('flipped');
 });
 
-// ===== ADICIONAR NOVO CARD =====
-
 addCardForm.addEventListener('submit', async (e) => {
   e.preventDefault();
-  
+
   const category = document.getElementById('newCategory').value;
   const front = document.getElementById('newFront').value;
   const back = document.getElementById('newBack').value;
-  
+
+  if (!validateCardForm(category, front, back)) return;
+
+  setLoading(true);
   const newCard = await addCard(category, front, back);
-  
+  setLoading(false);
+
   if (newCard) {
-    alert('✅ Card adicionado com sucesso!');
+    showFeedback('✅ Card adicionado com sucesso!', 'success');
     addCardForm.reset();
-    loadCards(); // Recarregar lista
+    await loadCards();
   }
 });
 
-// ===== RENDERIZAR LISTA DE CARDS =====
-
 async function renderCardsList() {
-  const allCards = await getAllCards();
-  
+  const allCards = currentCards;
+
   if (allCards.length === 0) {
     cardsList.innerHTML = '<p>Nenhum card disponível</p>';
     return;
   }
-  
+
   cardsList.innerHTML = '';
-  
-  allCards.forEach(card => {
+
+  allCards.forEach((card) => {
     const cardItem = document.createElement('div');
     cardItem.className = 'card-item';
     cardItem.innerHTML = `
@@ -116,42 +153,112 @@ async function renderCardsList() {
   });
 }
 
-// ===== DELETAR CARD =====
+function renderCardsGrid() {
+  const cardsGridElement = document.getElementById('cardsGrid');
+  const allCards = currentCards;
+
+  if (allCards.length === 0) {
+    cardsGridElement.innerHTML = '<p>Nenhum card disponível</p>';
+    return;
+  }
+
+  cardsGridElement.innerHTML = '';
+
+  allCards.forEach((card) => {
+    const cardMini = document.createElement('div');
+    cardMini.className = 'card-mini';
+    cardMini.innerHTML = `
+      <div class="inner">
+        <div class="face front">
+          <div>${card.front}</div>
+        </div>
+        <div class="face back">
+          <div>${card.back}</div>
+        </div>
+      </div>
+    `;
+    cardMini.addEventListener('click', () => {
+      cardMini.classList.toggle('flipped');
+    });
+    cardsGridElement.appendChild(cardMini);
+  });
+}
 
 async function deleteCardHandler(id) {
   if (confirm('Tem certeza que deseja deletar este card?')) {
-    await deleteCard(id);
-    alert('✅ Card deletado!');
-    loadCards();
+    setLoading(true);
+    const response = await deleteCard(id);
+    setLoading(false);
+    if (response) {
+      showFeedback('✅ Card deletado com sucesso!', 'success');
+      await loadCards();
+    }
   }
 }
-
-// ===== EDITAR CARD (Básico) =====
 
 async function editCard(id) {
-  const card = currentCards.find(c => c.id === id);
+  let card = currentCards.find((c) => c.id === id);
   if (!card) {
     const allCards = await getAllCards();
-    card = allCards.find(c => c.id === id);
+    card = allCards.find((c) => c.id === id);
   }
-  
-  const newFront = prompt('Nova pergunta:', card.front);
-  if (newFront === null) return;
-  
-  const newBack = prompt('Nova resposta:', card.back);
-  if (newBack === null) return;
-  
-  await updateCard(id, card.category, newFront, newBack);
-  alert('✅ Card atualizado!');
-  loadCards();
+
+  if (!card) {
+    showFeedback('Card não encontrado.', 'error');
+    return;
+  }
+
+  editingCardId = id;
+  editCategoryInput.value = card.category;
+  editFrontInput.value = card.front;
+  editBackInput.value = card.back;
+  openEditModal();
 }
 
-// ===== EVENT LISTENERS =====
+function openEditModal() {
+  editModal.classList.remove('hidden');
+}
+
+function closeEditModal() {
+  editModal.classList.add('hidden');
+  editingCardId = null;
+  editCardForm.reset();
+}
+
+editCardForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const category = editCategoryInput.value;
+  const front = editFrontInput.value;
+  const back = editBackInput.value;
+
+  if (!validateCardForm(category, front, back)) return;
+
+  if (!editingCardId) {
+    showFeedback('Erro ao identificar card para edição.', 'error');
+    return;
+  }
+
+  setLoading(true);
+  const updatedCard = await updateCard(editingCardId, category, front, back);
+  setLoading(false);
+
+  if (updatedCard) {
+    showFeedback('✅ Card atualizado com sucesso!', 'success');
+    closeEditModal();
+    await loadCards();
+  }
+});
+
+closeEditModalBtn.addEventListener('click', closeEditModal);
+editModal.addEventListener('click', (event) => {
+  if (event.target === editModal) {
+    closeEditModal();
+  }
+});
 
 prevBtn.addEventListener('click', prevCard);
 nextBtn.addEventListener('click', nextCard);
 categoryFilter.addEventListener('change', loadCards);
-
-// ===== INICIALIZAR =====
 
 window.addEventListener('DOMContentLoaded', loadCards);
