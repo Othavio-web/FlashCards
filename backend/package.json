@@ -2,19 +2,24 @@
   "name": "flashcards-backend",
   "version": "1.0.0",
   "description": "API para gerenciar flashcards",
+  "keywords": [
+    "flashcards",
+    "api"
+  ],
+  "license": "ISC",
+  "author": "Othavio",
+  "type": "commonjs",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js"
   },
-  "keywords": ["flashcards", "api"],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2",
     "cors": "^2.8.5",
-    "sequelize": "^6.32.0",
-    "sqlite3": "^5.1.6",
-    "dotenv": "^16.0.3"
-  }
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "sequelize": "^6.37.8",
+    "sqlite3": "^6.0.1"
+  },
+  "devDependencies": {}
 }
