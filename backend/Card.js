@@ -13,15 +13,27 @@ const Card = sequelize.define('Card', {
     allowNull: false,
     trim: true
   },
-  front: {
+  question: {
     type: DataTypes.TEXT,
     allowNull: false,
     trim: true
   },
-  back: {
+  answer: {
     type: DataTypes.TEXT,
     allowNull: false,
     trim: true
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+    field: 'created_at'
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+    field: 'updated_at'
   }
 }, {
   timestamps: true,
