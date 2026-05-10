@@ -21,19 +21,19 @@ export class ApiClient {
     return this.request(`/cards/category/${category}`);
   }
 
-  addCard(category, front, back) {
+  addCard(category, question, answer) {
     return this.request('/cards', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ category, front, back })
+      body: JSON.stringify({ category, front: question, back: answer })
     });
   }
 
-  updateCard(id, category, front, back) {
+  updateCard(id, category, question, answer) {
     return this.request(`/cards/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ category, front, back })
+      body: JSON.stringify({ category, front: question, back: answer })
     });
   }
 
