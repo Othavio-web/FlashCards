@@ -23,13 +23,17 @@ function FlashcardsApp() {
         ? `${API_URL}/cards/category/${selectedCategory}`
         : `${API_URL}/cards`;
       const response = await fetch(url);
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Erro ao carregar cards');
+      }
       const data = await response.json();
       setCards(data);
       filterCards(data, selectedCategory);
       setCurrentIndex(0);
       setFlipped(false);
     } catch (error) {
-      showFeedback('Erro ao carregar cards', 'error');
+      showFeedback(error.message || 'Erro ao carregar cards', 'error');
     } finally {
       setLoading(false);
     }
@@ -83,15 +87,18 @@ function FlashcardsApp() {
         body: JSON.stringify(formData)
       });
 
-      if (response.ok) {
-        showFeedback(editingCard ? '✅ Card atualizado!' : '✅ Card adicionado!', 'success');
-        setFormData({ category: '', question: '', answer: '' });
-        setEditingCard(null);
-        setShowForm(false);
-        await loadCards(category);
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Erro ao salvar card');
       }
+
+      showFeedback(editingCard ? '✅ Card atualizado!' : '✅ Card adicionado!', 'success');
+      setFormData({ category: '', question: '', answer: '' });
+      setEditingCard(null);
+      setShowForm(false);
+      await loadCards(category);
     } catch (error) {
-      showFeedback('Erro ao salvar card', 'error');
+      showFeedback(error.message || 'Erro ao salvar card', 'error');
     } finally {
       setLoading(false);
     }
@@ -103,12 +110,14 @@ function FlashcardsApp() {
     setLoading(true);
     try {
       const response = await fetch(`${API_URL}/cards/${id}`, { method: 'DELETE' });
-      if (response.ok) {
-        showFeedback('✅ Card deletado!', 'success');
-        await loadCards(category);
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Erro ao deletar card');
       }
+      showFeedback('✅ Card deletado!', 'success');
+      await loadCards(category);
     } catch (error) {
-      showFeedback('Erro ao deletar card', 'error');
+      showFeedback(error.message || 'Erro ao deletar card', 'error');
     } finally {
       setLoading(false);
     }

@@ -21,7 +21,8 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "sequelize": "^6.37.8",
-    "sqlite3": "^6.0.1"
+    "sqlite3": "^6.0.1",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",
