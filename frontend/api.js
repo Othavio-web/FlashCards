@@ -1,5 +1,4 @@
 // 🔌 API CLIENT - Funções para comunicar com o backend
-
 const API_URL = '/api';
 
 export class ApiClient {
