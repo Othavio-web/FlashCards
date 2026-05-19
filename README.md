@@ -17,9 +17,11 @@ FlashCards/
 │       └── cards.json     (Banco de dados)
 ├── frontend/
 │   ├── index.html         (Interface)
-│   ├── script.js          (Lógica principal)
+│   ├── main.js            (Ponto de entrada do frontend)
 │   ├── api.js             (Cliente HTTP)
-│   └── styles.css         (Estilos)
+│   ├── cardManager.js     (Estado e lógica dos cards)
+│   ├── uiController.js    (Renderização e eventos de UI)
+│   └── Styles.css         (Estilos)
 └── README.md
 ```
 
@@ -87,10 +89,12 @@ O backend é uma **API REST** que gerencia os flashcards:
 | `PUT` | `/api/cards/:id` | Editar um card |
 | `DELETE` | `/api/cards/:id` | Deletar um card |
 
-### **Frontend (script.js + api.js)**
+### **Frontend (main.js + api.js + cardManager.js + uiController.js)**
 
 - **api.js**: Funções que fazem requisições HTTP para o backend
-- **script.js**: Lógica da interface (navegação, CRUD, etc)
+- **cardManager.js**: Gerencia o estado dos cards e navegação
+- **uiController.js**: Atualiza o DOM, renderiza listas e liga eventos de UI
+- **main.js**: Ponto de entrada que conecta API, estado e interface
 - **index.html**: Interface do usuário
 
 ---

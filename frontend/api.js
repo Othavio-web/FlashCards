@@ -1,80 +1,44 @@
 // 🔌 API CLIENT - Funções para comunicar com o backend
-
 const API_URL = '/api';
 
-// ✅ GET: Listar todos os cards
-async function getAllCards() {
-  try {
-    const response = await fetch(`${API_URL}/cards`);
-    if (!response.ok) throw new Error('Erro ao buscar cards');
-    return await response.json();
-  } catch (error) {
-    console.error('❌ Erro:', error);
-    return [];
+export class ApiClient {
+  constructor(baseUrl = '/api') {
+    this.baseUrl = baseUrl;
   }
-}
 
-// ✅ GET: Listar cards por categoria
-async function getCardsByCategory(category) {
-  try {
-    const response = await fetch(`${API_URL}/cards/category/${category}`);
-    if (!response.ok) throw new Error('Erro ao buscar cards');
-    return await response.json();
-  } catch (error) {
-    console.error('❌ Erro:', error);
-    return [];
+  async request(path, options = {}) {
+    const response = await fetch(`${this.baseUrl}${path}`, options);
+    if (!response.ok) throw new Error('Erro na requisição');
+    return response.json();
   }
-}
 
-// ➕ POST: Adicionar novo card
-async function addCard(category, front, back) {
-  try {
-    const response = await fetch(`${API_URL}/cards`, {
+  getAllCards() {
+    return this.request('/cards');
+  }
+
+  getCardsByCategory(category) {
+    return this.request(`/cards/category/${category}`);
+  }
+
+  addCard(category, question, answer) {
+    return this.request('/cards', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ category, front, back })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ category, front: question, back: answer })
     });
-    if (!response.ok) throw new Error('Erro ao adicionar card');
-    return await response.json();
-  } catch (error) {
-    console.error('❌ Erro:', error);
-    alert('Erro ao adicionar card');
-    return null;
   }
-}
 
-// 📝 PUT: Editar um card
-async function updateCard(id, category, front, back) {
-  try {
-    const response = await fetch(`${API_URL}/cards/${id}`, {
+  updateCard(id, category, question, answer) {
+    return this.request(`/cards/${id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ category, front, back })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ category, front: question, back: answer })
     });
-    if (!response.ok) throw new Error('Erro ao editar card');
-    return await response.json();
-  } catch (error) {
-    console.error('❌ Erro:', error);
-    alert('Erro ao editar card');
-    return null;
   }
-}
 
-// 🗑️ DELETE: Deletar um card
-async function deleteCard(id) {
-  try {
-    const response = await fetch(`${API_URL}/cards/${id}`, {
+  deleteCard(id) {
+    return this.request(`/cards/${id}`, {
       method: 'DELETE'
     });
-    if (!response.ok) throw new Error('Erro ao deletar card');
-    return await response.json();
-  } catch (error) {
-    console.error('❌ Erro:', error);
-    alert('Erro ao deletar card');
-    return null;
   }
 }

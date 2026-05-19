@@ -1,15 +1,15 @@
-const { Sequelize } = require('sequelize');
-const path = require('path');
+import { Sequelize } from 'sequelize';
+import path from 'path';
 
 // 🗄️ INICIALIZAR SEQUELIZE COM SQLITE
-const sequelize = new Sequelize({
+export const sequelize = new Sequelize({
   dialect: 'sqlite',
   storage: path.join(__dirname, 'database.sqlite'),
   logging: false // Mudar para console.log para debug
 });
 
 // 🧪 TESTAR CONEXÃO
-async function testarConexao() {
+export async function testarConexao(): Promise<void> {
   try {
     await sequelize.authenticate();
     console.log('✅ Conexão com SQLite estabelecida com sucesso!');
@@ -19,7 +19,7 @@ async function testarConexao() {
 }
 
 // 📋 SINCRONIZAR MODELOS COM BANCO
-async function sincronizarBanco() {
+export async function sincronizarBanco(): Promise<void> {
   try {
     await sequelize.sync({ alter: true });
     console.log('✅ Banco de dados sincronizado!');
@@ -27,9 +27,3 @@ async function sincronizarBanco() {
     console.error('❌ Erro ao sincronizar banco:', error);
   }
 }
-
-module.exports = {
-  sequelize,
-  testarConexao,
-  sincronizarBanco
-};
